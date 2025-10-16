@@ -81,7 +81,7 @@ class DoublyLinkedList:
 
   def __str__(self):
     result = [str(nodo.value) for nodo in self]
-    return ' <--> '.join(result)
+    return '<--> '.join(result)
 
   def print(self):
     for nodo in self:

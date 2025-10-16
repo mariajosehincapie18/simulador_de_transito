@@ -23,7 +23,7 @@ de vehículos. Cada nodo contiene:
 Requerimientos:
 1. Insertar vehículos al final de la vía.
 2. Dar paso preferencial: mover al frente todos los vehículos de tipo moto con
-prioridad 1.
+prioridad 1.(revisar)
 3. Eliminar todos los camiones con prioridad mayor a 3 (por inspección
 técnica).
 4. Simular un accidente entre dos placas dadas: deben eliminarse todos los
