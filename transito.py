@@ -83,11 +83,155 @@ class ViaPrincipal:
             
             current_node = siguiente
 
+    def choque(self, placa1, placa2):
+        if placa1 == placa2:
+            return print("las placas son iguales")
         
+
+        p1= None
+        current_node = self.via_principal.head
+        while current_node is not None:
+            if current_node.value.placa == placa1 or current_node.value.placa == placa2:
+                p1 = current_node
+                break
+        
+            
+            current_node = current_node.next
+
+        if p1 is None:
+            return print("No existe la placa")
+            
+        p2= None            
+        current_node_2 = p1.next
+        while current_node_2 is not None:
+            if current_node_2.value.placa == placa1 or current_node_2.value.placa == placa2:
+                p2 = current_node_2
+                break
+
+            current_node_2 = current_node_2.next
+
+        if p2 is None:
+            return print("No existe la placa para comparar")
+
+        inicio = p1.next
+        if inicio is p2:
+            return print("son placas adyacentes no tiene autos en el medio")
+        
+
+        while inicio is not p2:
+            siguiente = inicio.next
+            inicio.next = None
+            inicio.prev = None
+
+
+            inicio = siguiente
+
+        p1.next = p2
+        p2.prev = p1
+    
+    def invertir_via(self):
+        cont1 = 0
+        current_1= self.via_principal.head
+        head = self.via_principal.head
+        tail = self.via_principal.tail
+        while current_1 is not None:
+            if current_1.value.tipo == "auto":
+                cont1 += 1
+                       
+            current_1= current_1.next
+        
+        cont2 =0
+        current_2 = self.via_principal.head
+        while current_2 is not None:
+            if current_2.value.tipo == "moto":
+                cont2 += 1
+                
+            current_2 = current_2.next
+        
+        if cont2 > cont1:
+            current = head
+            while current is not None:
+                siguiente = current.next
+                current.next = current.prev
+                current.prev = siguiente
+                current = siguiente
+
+
+            self.via_principal.head = tail
+            self.via_principal.tail = head
+
+        else:
+            print("no hay suficientes motos para invertir el orden de la via")
+
+
+    def reorganizar_por_prioridades(self):
+        fin_segmento = None
+        for p in range(1, 6):
+
+            if fin_segmento is None:
+                current = self.via_principal.head
+            else:
+                current= fin_segmento.next
+            
+            while current is not None:
+                next_current = current.next
+
+                if current.value.prioridad == p:
+                    if fin_segmento is None:
+                        if current is not self.via_principal.head:
+                            if current.prev is not None:
+                                current.prev.next = current.next
+                            if current.next is not None:
+                                current.next.prev = current.prev
+                            else:
+                                self.via_principal.tail= current.prev
+
+                        
+
+                            current.prev= None
+                            current.next= self.via_principal.head
+                            self.via_principal.head.prev= current
+                            self.via_principal.head= current
+
+                        fin_segmento= current
+
+                    elif current is fin_segmento.next:
+                        fin_segmento= current
+                    else:
+                        if current.prev is not  None:
+                            current.prev.next = current.next
+
+                        if current.next is not None:
+                            current.next.prev = current.prev
+
+                        else:
+                            self.via_principal.tail = current.prev
+
+
+
+                        despues= fin_segmento.next
+                        current.prev= fin_segmento
+                        current.next = despues
+
+                        fin_segmento.next = current
+                        if despues is not None:
+                            despues.prev= current
+                        else:
+                            self.via_principal.tail = current
+
+
+                        fin_segmento= current
+
+                current= next_current
 
 
 
     
+        
+
+        
+
+     
 
     def __str__(self):
         return str(self.via_principal)
@@ -96,12 +240,15 @@ class ViaPrincipal:
 
 
 via = ViaPrincipal()
-via.insertra_vehiculo("10B","auto", 2)
-via.insertra_vehiculo("11A","moto", 1)
-via.insertra_vehiculo("84M","camion", 4)
-via.insertra_vehiculo("19X","camion", 3)
+via.insertra_vehiculo("1","auto", 2)
+via.insertra_vehiculo("2","moto", 1)
+via.insertra_vehiculo("3","camion", 4)
+via.insertra_vehiculo("4","camion", 1)
+via.insertra_vehiculo("4","camion", 4)
+via.insertra_vehiculo("4","camion", 5)
+via.insertra_vehiculo("4","camion", 3)
 print(via)
-via.eliminar_camiones()
+via.reorganizar_por_prioridades()
 print(via)
 
 
