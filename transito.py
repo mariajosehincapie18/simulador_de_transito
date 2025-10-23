@@ -23,37 +23,72 @@ class ViaPrincipal:
 
 
     def paso_preferencial(self):
-        if self.via_principal.size < 2:
+        if self.via_principal.head is None or self.via_principal.head.next is None:
             return
         
-        current_node = self.via_principal.tail
-     
+        current_node = self.via_principal.head
+        fin_bloque = None
         while current_node is not None:
-            previo_original = current_node.prev
-
+            next_original= current_node.next
             if current_node.value.tipo == "moto" and current_node.value.prioridad == 1:
-                
-                if current_node is not self.via_principal.head:
+                if fin_bloque is None:
+                    if current_node is not self.via_principal.head:
+                        if current_node.prev is not None:
+                            current_node.prev.next = current_node.next
+                        else:
+                            self.via_principal.head = current_node.next
+
+                        if current_node.next is not None:
+                            current_node.next.prev = current_node.prev
+                        else:
+                            self.via_principal.tail = current_node.prev
+
+                        current_node.prev= None
+                        current_node.next = self.via_principal.head
+                        if self.via_principal.head is not None:
+                            self.via_principal.head.prev = current_node
+                        self.via_principal.head = current_node
+                    fin_bloque = self.via_principal.head
+
+                else:
+                    if current_node is fin_bloque.next:
+                        fin_bloque = current_node
+                    elif current_node is not self.via_principal.head:
+                        if current_node.prev is not None:
+                            current_node.prev.next = current_node.next
+                        else:
+                            self.via_principal.head=  current_node.next
+
+                        
+                        if current_node.next is not None:
+                            current_node.next.prev = current_node.prev
+                        else:
+                            self.via_principal.tail = current_node.prev
+
+                        anterior = fin_bloque.next
+                        current_node.prev = fin_bloque
+                        current_node.next = anterior
+                        fin_bloque.next = current_node
+                        if anterior is not None:
+                            anterior.prev = current_node
+                        else:
+                            self.via_principal.tail = current_node
+
+                        
+                        fin_bloque = current_node
                     
-                    if current_node.prev is not None:
-                        current_node.prev.next = current_node.next
                     else:
-                        self.via_principal.head = current_node.next
 
-                    if current_node.next is not None:
-                        current_node.next.prev = current_node.prev
+                        if current_node is fin_bloque:
+                            pass
+                        else:
+                            pass
 
-                    else:
-                        self.via_principal.tail = current_node.prev
+            current_node = next_original
 
-                    head = self.via_principal.head
-                    current_node.prev = None
-                    current_node.next = head
-                    if head is not None:
-                        head.prev = current_node    
-                    self.via_principal.head= current_node
 
-            current_node = previo_original
+                        
+               
             
     def eliminar_camiones(self):
         current_node = self.via_principal.head
@@ -225,11 +260,9 @@ class ViaPrincipal:
                 current= next_current
 
 
+ 
 
     
-        
-
-        
 
      
 
@@ -242,14 +275,26 @@ class ViaPrincipal:
 via = ViaPrincipal()
 via.insertra_vehiculo("1","auto", 2)
 via.insertra_vehiculo("2","moto", 1)
-via.insertra_vehiculo("3","camion", 4)
-via.insertra_vehiculo("4","camion", 1)
-via.insertra_vehiculo("4","camion", 4)
-via.insertra_vehiculo("4","camion", 5)
-via.insertra_vehiculo("4","camion", 3)
-print(via)
+via.insertra_vehiculo("3","moto", 3)
+via.insertra_vehiculo("4","camion",2)
+via.insertra_vehiculo("5","moto", 1)
+print("Via principal: ",via)
+via.paso_preferencial()
+print("Paso preferencial: ",via)
 via.reorganizar_por_prioridades()
-print(via)
+print("Reorganizar por prioridades: ",via)
+via.insertra_vehiculo("11","moto", 5)
+via.insertra_vehiculo("10","moto", 3)
+via.invertir_via()
+print("Inveritir via: ",via)
+via.choque("2","4")
+print("Choque: ",via)
+via.insertra_vehiculo("6","auto", 1)
+via.insertra_vehiculo("7","camion", 3)
+via.insertra_vehiculo("8","camion",2)
+via.insertra_vehiculo("9","auto", 1)
+via.eliminar_camiones()
+print("Camiones eliminados: ",via)
 
 
 
